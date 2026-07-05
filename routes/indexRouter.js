@@ -19,7 +19,7 @@ indexRouter.get("/", (req, res) => {
 });
 
 indexRouter.get("/new", (req, res) => {
-  res.send("New message screen which shows new message form");
+  res.render("form", { title: "New Message" });
 });
 
 indexRouter.post("/new", (req, res) => {
