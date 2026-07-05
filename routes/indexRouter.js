@@ -23,7 +23,12 @@ indexRouter.get("/new", (req, res) => {
 });
 
 indexRouter.post("/new", (req, res) => {
-  res.send("New message screen which sends a new message");
+  const { text, user } = req.body;
+  const added = new Date();
+
+  messages.push({ text, user, added });
+
+  res.redirect("/");
 });
 
 module.exports = indexRouter;
