@@ -1,25 +1,34 @@
-const messages = [
-  { text: "Hi there!", user: "Amando", added: new Date() },
-  { text: "Hello World!", user: "Charles", added: new Date() },
-];
+const db = require("../db/queries");
 
-exports.getMessages = (req, res) => {
+async function getMessages(req, res) {
+  const messages = await db.getAllMessages();
   res.render("index", { title: "Mini Messageboard", messages: messages });
-};
+}
 
-exports.getMessageById = (req, res) => {
-  const index = req.params.messageId;
-  const message = messages[index];
+async function getMessageById(req, res) {
+  const index = parseInt(req.params.messageId, 10);
+  const message = await db.getMessageById(index);
+
+  if (!message) {
+    return res.status(404).send("Message not found");
+  }
+
   res.render("message", { title: "Message Details", message: message });
-};
+}
 
-exports.getNewMessageForm = (req, res) => {
+function getNewMessageForm(req, res) {
   res.render("form", { title: "New Message" });
-};
+}
 
-exports.addNewMessage = (req, res) => {
-  const { text, user } = req.body;
-  const added = new Date();
-  messages.push({ text, user, added });
+async function addNewMessage(req, res) {
+  const { username, text } = req.body;
+  await db.insertMessage({ username, text });
   res.redirect("/");
+}
+
+module.exports = {
+  getMessages,
+  getMessageById,
+  getNewMessageForm,
+  addNewMessage,
 };
